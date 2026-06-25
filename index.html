@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f6f2ec">
+  <title>Yumichi OS — 思考構造の可視化</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <canvas id="scene"></canvas>
+  <div id="labels"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-dot"></span>
+      <span>Yumichi OS</span>
+    </div>
+    <div class="controls">
+      <button id="addFolderBtn" class="btn">+ 領域</button>
+      <label class="toggle">
+        <input type="checkbox" id="messToggle">
+        <span class="slider"></span>
+        <span>構造負荷モード</span>
+      </label>
+    </div>
+  </header>
+
+  <aside class="panel" id="panel" aria-hidden="true">
+    <div class="panel-header">
+      <div class="folder-icon"></div>
+      <h2 id="panelTitle">領域</h2>
+      <button class="close-btn" id="closeBtn" aria-label="閉じる">×</button>
+    </div>
+    <div class="panel-body">
+      <div class="memo-types" id="memoTypes"></div>
+      <div class="memo-input">
+        <input type="text" id="memoInput" placeholder="観察を記録... (Enter)" maxlength="240">
+        <button id="addMemoBtn" class="btn-primary">追加</button>
+      </div>
+      <ul id="memoList" class="memo-list"></ul>
+    </div>
+    <div class="panel-footer">
+      <button id="deleteFolderBtn" class="btn-danger">領域を削除</button>
+    </div>
+  </aside>
+
+  <div id="hint" class="hint">
+    領域をクリックして開く ／ ドラッグで回転 ／ 違和感は赤く脈動する
+  </div>
+
+  <div class="modal" id="addFolderModal" aria-hidden="true">
+    <div class="modal-content">
+      <h3>新しい領域</h3>
+      <input type="text" id="newFolderName" placeholder="領域名" maxlength="24">
+      <div class="modal-actions">
+        <button id="cancelAddFolder" class="btn-secondary">キャンセル</button>
+        <button id="confirmAddFolder" class="btn-primary">追加</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>
