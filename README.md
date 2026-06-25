@@ -1,5 +1,7 @@
 # Yumichi OS
 
+🌐 **公開URL**: https://ymakinose618-rgb.github.io/yumichi-brain-os/
+
 牧ノ瀬由美の思考構造を3D空間で可視化する個人OS。
 
 タスク管理ツールではない。
