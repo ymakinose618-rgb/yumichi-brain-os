@@ -65,5 +65,29 @@ Claude Code のメモリ（`C:\Users\y.makinose\.claude\projects\C--Users-y-maki
 
 ## 4. inbox の書き方
 
-スマホから GitHub Issue（`ymakinose618-rgb/yumichi-brain-os` の「📥 inbox（即書き）」テンプレ）で書く。
-1タップで開けるように iOS ショートカット化推奨。LINE経由でのinbox化は今回は実装しない（ai-agent-company は議論・振り返り・「由美の脳」の用途に限定）。
+**LINEで送るだけ**（プレフィックス不要）。ai-agent-company の LINE Bot が受け取って、
+yumichi-brain-os の GitHub Issue に `inbox` ラベル付きで自動保存する。
+「📥 inbox #123 に保存したよ」の1行が返る。摩擦ゼロ。
+
+GitHub Issue テンプレ（`.github/ISSUE_TEMPLATE/inbox.yml`）から直接書くのも可。LINE Bot が落ちてる時のバックアップ入口。
+
+同じLINE Botに他のトリガーもある：
+- `理恵：xxx` — 秘書対話（短い往復）
+- `議題：xxx` / `課題：xxx` — 10人全員会議
+- `質問ちょうだい` → `答え：xxx` — 麻美経由で「由美の脳」に保存
+- 「軸ズレてない？」など — 麻美による過去議論の振り返り
+
+## 5. LINE通知（秘書からの外向き）
+
+ai-agent-company に `POST /notify` エンドポイントがある。Bearer認証で任意テキストを由美LINEへpush。
+
+- **21:07 Actions**: daily 書けたら自動で「daily-digest 書いたよ」通知
+- **ローカル Claude Code**: 作業終わったら `node scripts/notify.mjs "作業完了"` で通知
+- **手動**: `curl -H "Authorization: Bearer $NOTIFY_SECRET" -H "Content-Type: application/json" -d '{"text":"..."}' $NOTIFY_URL` でどこからでも
+
+必要な Secrets:
+- yumichi-brain-os の GitHub Secrets: `NOTIFY_URL`, `NOTIFY_SECRET`
+- Cloudflare Workers Secrets: `NOTIFY_SECRET`, `YUMI_LINE_USER_ID`
+- ローカル: 同じ変数を環境変数で
+
+`scripts/notify.mjs` が汎用wrapper。NOTIFY_URL / NOTIFY_SECRET 未設定なら黙ってスキップ（CIを落とさない）。
