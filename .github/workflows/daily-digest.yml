@@ -1,0 +1,63 @@
+name: daily-digest (21:07 JST)
+
+on:
+  schedule:
+    # 12:07 UTC = 21:07 JST。GitHub Actions は cron 実行が数分遅延することがある
+    - cron: '7 12 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: read
+
+concurrency:
+  group: daily-digest
+  cancel-in-progress: false
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    env:
+      TZ: Asia/Tokyo
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_USER: ymakinose618-rgb
+      # ANTHROPIC_API_KEY は v0.2（Claude要約フェーズ）で使う。今の骨組みでは未使用でもOK
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Collect inbox + repo activity
+        run: node scripts/daily-digest.mjs
+
+      - name: Commit and push if changed
+        id: commit
+        run: |
+          if git diff --quiet notes/daily 2>/dev/null; then
+            echo "no changes in notes/daily"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git config user.name "yumichi-daily-bot"
+          git config user.email "actions@github.com"
+          DATE=$(TZ=Asia/Tokyo date +%F)
+          git add notes/daily
+          git commit -m "daily-digest: ${DATE}"
+          git push
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+          echo "date=${DATE}" >> "$GITHUB_OUTPUT"
+
+      - name: Notify LINE
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          NOTIFY_URL: ${{ secrets.NOTIFY_URL }}
+          NOTIFY_SECRET: ${{ secrets.NOTIFY_SECRET }}
+        run: |
+          DATE="${{ steps.commit.outputs.date }}"
+          URL="https://github.com/${{ github.repository }}/blob/main/notes/daily/${DATE}.md"
+          node scripts/notify.mjs "daily-digest 書いたよ (${DATE})\n${URL}" daily-digest

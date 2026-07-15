@@ -1,0 +1,27 @@
+name: 📥 inbox（即書き）
+description: スマホから即書きする観察・違和感・アイデア。Claude が夜に拾って daily/ に整理する
+title: "[inbox] "
+labels: ["inbox"]
+body:
+  - type: textarea
+    id: body
+    attributes:
+      label: 中身
+      description: 気持ち/違和感/観察/アイデアを、フォーマットを気にせず書く。タグは `#違和感` `#work` `#idea` など自然に
+      placeholder: |
+        シフト管理、田口さんが結局スプシに戻ってる。UIじゃなくて通知が課題？ #違和感 #work
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: 種別（任意）
+      options:
+        - "（指定なし）"
+        - 観察
+        - 違和感
+        - アイデア
+        - 判断（作る/待つ/やめる）
+        - 感情
+    validations:
+      required: false
