@@ -34,8 +34,9 @@ export function createEdges(edges) {
   const positions = new Float32Array(Math.max(edgesData.length, 1) * 6);
   const geo = new THREE.BufferGeometry();
   geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  // 関係線 = 白質の神経路
   const mat = new THREE.LineBasicMaterial({
-    color: 0xc4afa1, transparent: true, opacity: 0.22,
+    color: 0xe8ded0, transparent: true, opacity: 0.24,
   });
   edgesGroup = new THREE.LineSegments(geo, mat);
   return edgesGroup;
@@ -57,33 +58,36 @@ function updateEdges() {
 function createFolderMesh(folder) {
   const group = new THREE.Group();
 
-  // 構造負荷ハロー：違和感が溜まった領域で脈動する
+  // 違和感発火ハロー：違和感が溜まった領域でγ波リズムで脈動する
   const haloGeo = new THREE.PlaneGeometry(2.4, 1.8);
   const haloMat = new THREE.MeshBasicMaterial({
-    color: 0xd64545, transparent: true, opacity: 0, side: THREE.DoubleSide,
+    color: 0xff3d5a, transparent: true, opacity: 0, side: THREE.DoubleSide,
   });
   const halo = new THREE.Mesh(haloGeo, haloMat);
   halo.position.z = -0.12;
   group.add(halo);
 
+  // 領域の本体 = 灰白質のマットな面
   const bodyGeo = new THREE.BoxGeometry(1.6, 1.2, 0.18);
   const bodyMat = new THREE.MeshStandardMaterial({
-    color: 0xfbf4ec, roughness: 0.6, metalness: 0.05,
+    color: 0x8a7d6e, roughness: 0.78, metalness: 0.06,
   });
   const body = new THREE.Mesh(bodyGeo, bodyMat);
   group.add(body);
 
+  // タブ = inbox は発火の赤、他は皮質ハイライト色
   const isInbox = folder.id === 'inbox';
-  const tabColor = isInbox ? 0xd64545 : 0xcdb8a4;
+  const tabColor = isInbox ? 0xff3d5a : 0xc9bda8;
   const tabGeo = new THREE.BoxGeometry(0.55, 0.18, 0.18);
-  const tabMat = new THREE.MeshStandardMaterial({ color: tabColor, roughness: 0.5 });
+  const tabMat = new THREE.MeshStandardMaterial({ color: tabColor, roughness: 0.55 });
   const tab = new THREE.Mesh(tabGeo, tabMat);
   tab.position.set(-0.42, 0.6 + 0.09, 0);
   group.add(tab);
 
+  // 下辺のアクセント = 白質のライン
   const accentGeo = new THREE.PlaneGeometry(1.3, 0.03);
   const accentMat = new THREE.MeshBasicMaterial({
-    color: 0xd64545, transparent: true, opacity: 0.55,
+    color: 0xe8ded0, transparent: true, opacity: 0.5,
   });
   const accent = new THREE.Mesh(accentGeo, accentMat);
   accent.position.set(0, -0.42, 0.092);
@@ -153,13 +157,13 @@ export function updateFolders(t, messMode, cameraPos, folders) {
       else group.lookAt(0, 0, 0);
     }
 
-    // 違和感シグナル：違和感数が増えるとハローが脈動する
+    // 違和感発火：違和感が3件以上でγ波リズム(~40Hz を可視化スケールに落として ~1.6Hz)
     const halo = group.userData.halo;
     if (halo) {
       const intensity = Math.min(frictionCount / 3, 1);
-      const pulse = 0.6 + 0.4 * Math.sin(t * 1.5 + phase);
-      halo.material.opacity = intensity * 0.42 * pulse;
-      halo.scale.setScalar(1 + intensity * 0.18 * pulse);
+      const gamma = 0.55 + 0.45 * Math.sin(t * 3.8 + phase);
+      halo.material.opacity = intensity * 0.5 * gamma;
+      halo.scale.setScalar(1 + intensity * 0.22 * gamma);
     }
 
     memoCards.forEach((card, i) => {

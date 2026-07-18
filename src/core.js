@@ -9,24 +9,27 @@ let lastSwitchTime = 0;
 export function createCore() {
   const group = new THREE.Group();
 
+  // 中央コア = 脳幹 / 視床。default-mode ネットワークの青い発光体
   const innerGeo = new THREE.IcosahedronGeometry(1.45, 2);
   const innerMat = new THREE.MeshStandardMaterial({
-    color: 0xfffaf0, roughness: 0.45, metalness: 0.18,
-    emissive: 0xff8a8a, emissiveIntensity: 0.12,
+    color: 0x1a3352, roughness: 0.4, metalness: 0.25,
+    emissive: 0x4a8fd6, emissiveIntensity: 0.55,
   });
   coreMesh = new THREE.Mesh(innerGeo, innerMat);
   group.add(coreMesh);
 
+  // ワイヤーフレーム = 生物発光ブルーの神経ネット
   const wireGeo = new THREE.IcosahedronGeometry(1.62, 1);
   const wireMat = new THREE.MeshBasicMaterial({
-    color: 0xd64545, wireframe: true, transparent: true, opacity: 0.28,
+    color: 0x00d9ff, wireframe: true, transparent: true, opacity: 0.32,
   });
   wireframe = new THREE.Mesh(wireGeo, wireMat);
   group.add(wireframe);
 
+  // 外郭グロー = 青い雰囲気ネットワーク
   const glowGeo = new THREE.SphereGeometry(2.1, 32, 32);
   const glowMat = new THREE.MeshBasicMaterial({
-    color: 0xffa0a0, transparent: true, opacity: 0.08, side: THREE.BackSide,
+    color: 0x4a8fd6, transparent: true, opacity: 0.12, side: THREE.BackSide,
   });
   coreGlow = new THREE.Mesh(glowGeo, glowMat);
   group.add(coreGlow);

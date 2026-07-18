@@ -11,7 +11,8 @@ const canvas = document.getElementById('scene');
 const labelsRoot = document.getElementById('labels');
 
 const scene = new THREE.Scene();
-scene.fog = new THREE.Fog(0xf3eee6, 22, 55);
+// 脳スープの深度を fog で表現
+scene.fog = new THREE.Fog(0x0a0d14, 22, 60);
 
 const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
 camera.position.set(0, 3.5, 17);
@@ -24,14 +25,18 @@ renderer.outputColorSpace = THREE.SRGBColorSpace;
 const labelRenderer = new CSS2DRenderer({ element: labelsRoot });
 labelRenderer.setSize(window.innerWidth, window.innerHeight);
 
-scene.add(new THREE.AmbientLight(0xffffff, 0.7));
-const keyLight = new THREE.DirectionalLight(0xfff5e8, 0.8);
+// 環境光 = default-mode の冷たい青
+scene.add(new THREE.AmbientLight(0x8faed4, 0.55));
+// キーライト = 皮質を照らす暖色（琥珀寄りのシナプス光）
+const keyLight = new THREE.DirectionalLight(0xf4d9b0, 0.75);
 keyLight.position.set(5, 8, 6);
 scene.add(keyLight);
-const fillLight = new THREE.DirectionalLight(0xffe0e0, 0.4);
+// フィルライト = 逆側から default-mode blue の弱光
+const fillLight = new THREE.DirectionalLight(0x4a8fd6, 0.35);
 fillLight.position.set(-6, -2, 4);
 scene.add(fillLight);
-const rimLight = new THREE.PointLight(0xff8a8a, 1.4, 30);
+// リムライト = コアから放つ発火の赤
+const rimLight = new THREE.PointLight(0xff3d5a, 1.2, 26);
 rimLight.position.set(0, 0, 0);
 scene.add(rimLight);
 
@@ -54,9 +59,10 @@ for (let i = 0; i < particleCount; i++) {
   positions[i * 3 + 2] = (Math.random() - 0.5) * 50;
 }
 particleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+// 空間に漂う微粒子 = 神経路の残光。琥珀色の微光で脳空間を満たす
 const particles = new THREE.Points(
   particleGeo,
-  new THREE.PointsMaterial({ color: 0xd9c8b8, size: 0.04, transparent: true, opacity: 0.55 }),
+  new THREE.PointsMaterial({ color: 0xf4a95c, size: 0.04, transparent: true, opacity: 0.48 }),
 );
 scene.add(particles);
 
