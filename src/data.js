@@ -26,11 +26,12 @@ export const EDGES = [
 ];
 
 // 観察の4類型 — タスクの入れ物ではなく、構造を観るための分類。
+// 色は脳パレット: 灰白質 / シナプス琥珀 / 発火赤 / 生物発光ブルー
 export const NOTE_TYPES = {
-  observation: { label: '観察',       color: '#7b7470', desc: 'なにが起きたか' },
-  hypothesis:  { label: '構造仮説',   color: '#9b6a65', desc: 'なぜ起きるのか' },
-  friction:    { label: '違和感',     color: '#d64545', desc: '非効率の検知' },
-  system:      { label: '自動化候補', color: '#a85050', desc: '再現性化できる' },
+  observation: { label: '観察',       color: '#c9bda8', desc: 'なにが起きたか' },
+  hypothesis:  { label: '構造仮説',   color: '#f4a95c', desc: 'なぜ起きるのか' },
+  friction:    { label: '違和感',     color: '#ff3d5a', desc: '非効率の検知' },
+  system:      { label: '自動化候補', color: '#00d9ff', desc: '再現性化できる' },
 };
 
 export const DEFAULT_NOTE_TYPE = 'observation';
