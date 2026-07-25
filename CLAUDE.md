@@ -22,7 +22,17 @@ Claude Code のメモリ（`C:\Users\y.makinose\.claude\projects\C--Users-y-maki
 - `feedback-font-yu-gothic-medium` — 紙配布物のフォントは Yu Gothic Medium
 - `feedback-asagi-character-call` — `@キャラ名` で asagi-{name} subagent を Agent ツールで起動
 
-## 2. リポ一覧と一行メモ
+## 2. git 運用 — 変更を加えたら必ずコミットする
+
+**未コミットの変更を残したままセッションを終えない。** 由美さんと田口さんが同じリポを触るため、未コミットの作業が残っていると、他の人が `git pull` した時にそのファイルを更新できず衝突する（2026-07-25、kikaku-os-web で実際に発生。ブログ担当者機能の未コミット456行を stash 退避してから pull する必要があった）。
+
+- 作業が一区切りついたら、その場で `git add` → `git commit` → `git push` まで通す。「後でまとめて」は禁止。
+- 途中で中断する時も放置しない。WIP コミットを作って push する。メッセージは `wip: ブログ担当者機能（担当者欄まで実装、保存処理は未着手）` のように「どこまでやったか」を書く。
+- セッションを終える前に必ず `git status` を実行する。何か出たらコミットしてから終わる。
+- 作業を始める時も必ず `git status` と `git log --oneline -5` で現在地を確認する（並行作業・Codex併用があるため）。
+- 他の人の未コミット変更を見つけたら、勝手にコミットも破棄もしない。`git stash` で退避 → `git pull` → `git stash pop` で戻し、本人に報告する。
+
+## 3. リポ一覧と一行メモ
 
 思考系
 - **yumichi-brain-os** (public) — 思考構造3D可視化 + notes/書き溜め + 日次21:07 Actions
@@ -51,7 +61,7 @@ Claude Code のメモリ（`C:\Users\y.makinose\.claude\projects\C--Users-y-maki
 暮らし系
 - **kakei-viewer** — 個人家計ビューア（by japcat18連携）
 
-## 3. 日次 21:07 Routine
+## 4. 日次 21:07 Routine
 
 `.github/workflows/daily-digest.yml`（yumichi-brain-os 内、cron `7 12 * * *` UTC = JST 21:07）が毎日実行。
 
@@ -63,7 +73,7 @@ Claude Code のメモリ（`C:\Users\y.makinose\.claude\projects\C--Users-y-maki
 
 手動trigger も `workflow_dispatch` で可能。実装詳細は yumichi-brain-os/notes/daily/README.md 参照。
 
-## 4. inbox の書き方
+## 5. inbox の書き方
 
 **LINEで送るだけ**（プレフィックス不要）。ai-agent-company の LINE Bot が受け取って、
 yumichi-brain-os の GitHub Issue に `inbox` ラベル付きで自動保存する。
@@ -77,7 +87,7 @@ GitHub Issue テンプレ（`.github/ISSUE_TEMPLATE/inbox.yml`）から直接書
 - `質問ちょうだい` → `答え：xxx` — 麻美経由で「由美の脳」に保存
 - 「軸ズレてない？」など — 麻美による過去議論の振り返り
 
-## 5. LINE通知（秘書からの外向き）
+## 6. LINE通知（秘書からの外向き）
 
 ai-agent-company に `POST /notify` エンドポイントがある。Bearer認証で任意テキストを由美LINEへpush。
 
